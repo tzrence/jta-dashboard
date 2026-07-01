@@ -5,11 +5,13 @@ st.set_page_config(page_title="NAVI Fleet Operations Dashboard", layout="wide")
 
 st.title("🚍 NAVI Fleet Operations Dashboard")
 
-df = pd.read_excel("fleet_data.xlsx")
+# Use header=1 because your headers are on the second row
+df = pd.read_excel("fleet_data.xlsx", header=1)
 
-# Remove hidden spaces from headers
+# Clean column names
 df.columns = df.columns.str.strip()
 
+# KPIs
 total = len(df)
 active = len(df[df["Status"] == "Active"])
 down = len(df[df["Status"] == "Down"])
@@ -24,20 +26,12 @@ col4.metric("In Maintenance", maintenance)
 
 st.divider()
 
+# Fleet Status Table
 st.subheader("Fleet Status Table")
-def color_status(val):
-    if val == "Active":
-        return "background-color: #c8f7c5"  # green
-    elif val == "Down":
-        return "background-color: #f7c5c5"  # red
-    elif val == "Maintenance":
-        return "background-color: #fff3b0"  # yellow
-    return ""
+st.dataframe(df, use_container_width=True)
 
-styled_df = df.style.applymap(color_status, subset=["Status"])
-
-st.subheader("Fleet Status Table")
-st.dataframe(styled_df, use_container_width=True)
+# Filter
+st.subheader("Filter by Status")
 
 status_filter = st.selectbox(
     "Choose Status",
@@ -51,8 +45,9 @@ else:
 
 st.dataframe(filtered_df, use_container_width=True)
 
+# Quick Insight
 st.subheader("Quick Insight")
 
 if not df.empty:
     most_used = df.loc[df["Miles This Month"].idxmax(), "Vehicle"]
-    st.write(f"🚍 Most used vehicle: **{most_used}**")
+    st.success(f"🚍 Most used vehicle: {most_used}")
