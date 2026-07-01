@@ -28,15 +28,24 @@ st.dataframe(df, use_container_width=True)
 
 # --- Filter ---
 st.subheader("Filter by Status")
-status_filter = st.selectbox("Choose status", ["All", "Active", "Down", "Maintenance"])
+
+status_filter = st.selectbox(
+    "Choose status",
+    ["All", "Active", "Down", "Maintenance"]
+)
 
 if status_filter != "All":
-    df = df[df["Status"] == status_filter]
+    filtered_df = df[df["Status"] == status_filter]
+else:
+    filtered_df = df
 
-st.dataframe(df, use_container_width=True)
+st.dataframe(filtered_df, use_container_width=True)
 
 # --- Insight ---
 st.subheader("Quick Insight")
 
-most_used = df.loc[df["Miles This Month"].idxmax(), "Vehicle"]
-st.write(f"Most used vehicle: **{most_used}**")
+if len(df) > 0:
+    most_used = df.loc[df["Miles This Month"].idxmax(), "Vehicle"]
+    st.write(f"🚍 Most used vehicle: **{most_used}**")
+else:
+    st.write("No data available.")
