@@ -30,13 +30,13 @@ st.dataframe(df, use_container_width=True)
 # Filter
 st.subheader("Filter by Status")
 
-status_filter = st.selectbox(
+Status_filter = st.selectbox(
     "Choose Status",
     ["All", "Active", "Down", "Maintenance"]
 )
 
-if status_filter != "All":
-    filtered_df = df[df["Status"] == status_filter]
+if Status_filter != "All":
+    filtered_df = df[df["Status"] == Status_filter]
 else:
     filtered_df = df
 
