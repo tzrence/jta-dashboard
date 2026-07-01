@@ -5,14 +5,7 @@ st.set_page_config(page_title="Fleet Dashboard", layout="wide")
 
 st.title("NAVI Fleet Performance Dashboard")
 
-data = {
-    "Vehicle": ["Bus 1501", "Bus 1502", "Bus 1503", "Bus 1504", "Bus 1505"],
-    "Status": ["Active", "Active", "Maintenance", "Down", "Active"],
-    "Miles This Month": [3200, 2800, 0, 0, 4100],
-    "Days Used": [25, 22, 0, 0, 28]
-}
-
-df = pd.DataFrame(data)
+df = pd.read_excel("fleet_data.xlsx")
 
 # --- KPIs ---
 total = len(df)
