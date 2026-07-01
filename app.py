@@ -3,7 +3,7 @@ import pandas as pd
 
 st.set_page_config(page_title="Fleet Dashboard", layout="wide")
 
-st.title("Fleet KPI Dashboard")
+st.title("NAVI Fleet Performance Dashboard")
 
 data = {
     "Vehicle": ["Bus 1501", "Bus 1502", "Bus 1503", "Bus 1504", "Bus 1505"],
