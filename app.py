@@ -1,18 +1,12 @@
 import streamlit as st
 import pandas as pd
 
-st.set_page_config(page_title="Fleet Dashboard", layout="wide")
+st.set_page_config(page_title="NAVI Fleet Operations Dashboard", layout="wide")
 
-st.title("NAVI Fleet Performance Dashboard")
+st.title("🚍 NAVI Fleet Operations Dashboard")
 
-data = {
-    "Vehicle": ["Bus 1501", "Bus 1502", "Bus 1503", "Bus 1504", "Bus 1505"],
-    "Status": ["Active", "Active", "Maintenance", "Down", "Active"],
-    "Miles This Month": [3200, 2800, 0, 0, 4100],
-    "Days Used": [25, 22, 0, 0, 28]
-}
-
-df = pd.DataFrame(data)
+# --- Load Excel file ---
+df = pd.read_excel("fleet_data.xlsx")
 
 # --- KPIs ---
 total = len(df)
@@ -32,19 +26,17 @@ st.divider()
 st.subheader("Fleet Status Table")
 st.dataframe(df, use_container_width=True)
 
-# --- Filters ---
+# --- Filter ---
 st.subheader("Filter by Status")
 status_filter = st.selectbox("Choose status", ["All", "Active", "Down", "Maintenance"])
 
 if status_filter != "All":
-    filtered_df = df[df["Status"] == status_filter]
-else:
-    filtered_df = df
+    df = df[df["Status"] == status_filter]
 
-st.dataframe(filtered_df, use_container_width=True)
+st.dataframe(df, use_container_width=True)
 
-# --- Simple Insights ---
+# --- Insight ---
 st.subheader("Quick Insight")
 
 most_used = df.loc[df["Miles This Month"].idxmax(), "Vehicle"]
-st.write(f"🚍 Most used vehicle this month: **{most_used}**")
+st.write(f"Most used vehicle: **{most_used}**")
