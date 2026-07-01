@@ -25,7 +25,19 @@ col4.metric("In Maintenance", maintenance)
 st.divider()
 
 st.subheader("Fleet Status Table")
-st.dataframe(df, use_container_width=True)
+def color_status(val):
+    if val == "Active":
+        return "background-color: #c8f7c5"  # green
+    elif val == "Down":
+        return "background-color: #f7c5c5"  # red
+    elif val == "Maintenance":
+        return "background-color: #fff3b0"  # yellow
+    return ""
+
+styled_df = df.style.applymap(color_status, subset=["Status"])
+
+st.subheader("Fleet Status Table")
+st.dataframe(styled_df, use_container_width=True)
 
 status_filter = st.selectbox(
     "Choose Status",
