@@ -1,12 +1,16 @@
 import streamlit as st
 import pandas as pd
 
-st.set_page_config(page_title="NAVI Fleet Operations Dashboard", layout="wide")
+st.set_page_config(
+    page_title="NAVI Fleet Operations Dashboard",
+    layout="wide"
+)
 
+# ===== CUSTOM STYLING =====
 st.markdown("""
 <style>
 .main {
-    background-color: #003366;
+    background-color: #f5f7fa;
 }
 
 h1 {
@@ -17,8 +21,7 @@ div[data-testid="metric-container"] {
     background-color: white;
     border: 2px solid #003366;
     padding: 15px;
-    border-radius: 10px;
-    text-align: center;
+    border-radius: 12px;
 }
 
 div[data-testid="metric-container"] label {
@@ -27,53 +30,37 @@ div[data-testid="metric-container"] label {
 </style>
 """, unsafe_allow_html=True)
 
+# ===== TITLE =====
 st.title("🚍 NAVI Fleet Operations Dashboard")
+st.caption("Real-Time Fleet Availability & Utilization")
 
-# Load Excel file
+# ===== LOAD DATA =====
 df = pd.read_excel("fleet_data.xlsx")
-
-# Remove hidden spaces from headers
 df.columns = df.columns.str.strip()
 
-# KPIs
+# ===== KPI CALCULATIONS =====
 total = len(df)
 active = len(df[df["Status"] == "Active"])
 down = len(df[df["Status"] == "Down"])
 maintenance = len(df[df["Status"] == "Maintenance"])
 
+# ===== SIDEBAR =====
+st.sidebar.header("Dashboard Info")
+st.sidebar.write("NAVI Fleet Management")
+st.sidebar.write(f"Vehicles Tracked: {total}")
+
+# ===== KPI CARDS =====
 col1, col2, col3, col4 = st.columns(4)
 
-col1.metric("Total Vehicles", total)
-col2.metric("Active", active)
-col3.metric("Down", down)
-col4.metric("In Maintenance", maintenance)
+col1.metric("🚍 Total Vehicles", total)
+col2.metric("🟢 Active", active)
+col3.metric("🔴 Down", down)
+col4.metric("🟡 Maintenance", maintenance)
 
 st.divider()
 
-# Fleet Status Table
-st.subheader("Fleet Status Table")
-st.dataframe(df, use_container_width=True)
+# ===== STATUS CHART =====
+st.subheader("Fleet Status Overview")
 
-# Filter
-st.subheader("Filter by Status")
+status_counts = df["Status"].value_counts()
 
-status_filter = st.selectbox(
-    "Choose Status",
-    ["All", "Active", "Down", "Maintenance"]
-)
-
-if status_filter != "All":
-    filtered_df = df[df["Status"] == status_filter]
-else:
-    filtered_df = df
-
-st.dataframe(filtered_df, use_container_width=True)
-
-# Quick Insight
-st.subheader("Quick Insight")
-
-if not df.empty:
-    most_used = df.loc[df["Miles This Month"].idxmax(), "Vehicle"]
-    st.write(f"🚍 Most used vehicle this month: **{most_used}**")
-else:
-    st.write("No data available.")
