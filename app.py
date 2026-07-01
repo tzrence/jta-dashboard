@@ -5,10 +5,11 @@ st.set_page_config(page_title="NAVI Fleet Operations Dashboard", layout="wide")
 
 st.title("🚍 NAVI Fleet Operations Dashboard")
 
-# Load Excel file
 df = pd.read_excel("fleet_data.xlsx")
 
-# KPIs
+# Remove hidden spaces from headers
+df.columns = df.columns.str.strip()
+
 total = len(df)
 active = len(df[df["Status"] == "Active"])
 down = len(df[df["Status"] == "Down"])
@@ -23,30 +24,23 @@ col4.metric("In Maintenance", maintenance)
 
 st.divider()
 
-# Fleet Status Table
 st.subheader("Fleet Status Table")
 st.dataframe(df, use_container_width=True)
 
-# Filter
-st.subheader("Filter by Status")
-
-Status_filter = st.selectbox(
+status_filter = st.selectbox(
     "Choose Status",
     ["All", "Active", "Down", "Maintenance"]
 )
 
-if Status_filter != "All":
-    filtered_df = df[df["Status"] == Status_filter]
-else:
+if status_filter == "All":
     filtered_df = df
+else:
+    filtered_df = df[df["Status"] == status_filter]
 
 st.dataframe(filtered_df, use_container_width=True)
 
-# Quick Insight
 st.subheader("Quick Insight")
 
 if not df.empty:
     most_used = df.loc[df["Miles This Month"].idxmax(), "Vehicle"]
-    st.write(f"🚍 Most used vehicle this month: **{most_used}**")
-else:
-    st.write("No data available.")
+    st.write(f"🚍 Most used vehicle: **{most_used}**")
