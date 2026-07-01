@@ -6,61 +6,86 @@ st.set_page_config(
     layout="wide"
 )
 
-# ===== CUSTOM STYLING =====
+# ===== NAVI HEADER =====
 st.markdown("""
-<style>
-.main {
-    background-color: #f5f7fa;
-}
-
-h1 {
-    color: #003366;
-}
-
-div[data-testid="metric-container"] {
-    background-color: white;
-    border: 2px solid #003366;
-    padding: 15px;
-    border-radius: 12px;
-}
-
-div[data-testid="metric-container"] label {
-    color: #003366;
-}
-</style>
+<div style="
+background-color:#003366;
+padding:15px;
+border-radius:10px;
+margin-bottom:20px;">
+<h1 style="color:white;text-align:center;">
+🚍 NAVI Fleet Operations Dashboard
+</h1>
+</div>
 """, unsafe_allow_html=True)
 
-# ===== TITLE =====
-st.title("🚍 NAVI Fleet Operations Dashboard")
 st.caption("Real-Time Fleet Availability & Utilization")
 
 # ===== LOAD DATA =====
 df = pd.read_excel("fleet_data.xlsx")
+
+# Clean column names
 df.columns = df.columns.str.strip()
 
-# ===== KPI CALCULATIONS =====
+# ===== KPIs =====
 total = len(df)
 active = len(df[df["Status"] == "Active"])
 down = len(df[df["Status"] == "Down"])
 maintenance = len(df[df["Status"] == "Maintenance"])
 
-# ===== SIDEBAR =====
-st.sidebar.header("Dashboard Info")
-st.sidebar.write("NAVI Fleet Management")
-st.sidebar.write(f"Vehicles Tracked: {total}")
-
-# ===== KPI CARDS =====
 col1, col2, col3, col4 = st.columns(4)
 
-col1.metric("🚍 Total Vehicles", total)
-col2.metric("🟢 Active", active)
-col3.metric("🔴 Down", down)
-col4.metric("🟡 Maintenance", maintenance)
+with col1:
+    st.info(f"🚍 Total Vehicles: {total}")
+
+with col2:
+    st.success(f"🟢 Active: {active}")
+
+with col3:
+    st.error(f"🔴 Down: {down}")
+
+with col4:
+    st.warning(f"🟡 Maintenance: {maintenance}")
 
 st.divider()
 
-# ===== STATUS CHART =====
+# ===== CHART =====
 st.subheader("Fleet Status Overview")
 
 status_counts = df["Status"].value_counts()
 
+st.bar_chart(status_counts)
+
+st.divider()
+
+# ===== TABLE =====
+display_df = df.copy()
+
+display_df["Status"] = display_df["Status"].replace({
+    "Active": "🟢 Active",
+    "Down": "🔴 Down",
+    "Maintenance": "🟡 Maintenance"
+})
+
+st.subheader("Fleet Status Table")
+
+st.dataframe(
+    display_df,
+    use_container_width=True
+)
+
+# ===== FILTER =====
+st.subheader("Filter by Status")
+
+status_filter = st.selectbox(
+    "Choose Status",
+    ["All", "Active", "Down", "Maintenance"]
+)
+
+if status_filter == "All":
+    filtered_df = df
+else:
+    filtered_df = df[df["Status"] == status_filter]
+
+st.dataframe(
+    filtered_df,
