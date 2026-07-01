@@ -6,7 +6,7 @@ st.set_page_config(page_title="NAVI Fleet Operations Dashboard", layout="wide")
 st.markdown("""
 <style>
 .main {
-    background-color: #f5f7fa;
+    background-color: #003366;
 }
 
 h1 {
