@@ -3,6 +3,30 @@ import pandas as pd
 
 st.set_page_config(page_title="NAVI Fleet Operations Dashboard", layout="wide")
 
+st.markdown("""
+<style>
+.main {
+    background-color: #f5f7fa;
+}
+
+h1 {
+    color: #003366;
+}
+
+div[data-testid="metric-container"] {
+    background-color: white;
+    border: 2px solid #003366;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+div[data-testid="metric-container"] label {
+    color: #003366;
+}
+</style>
+""", unsafe_allow_html=True)
+
 st.title("🚍 NAVI Fleet Operations Dashboard")
 
 # Load Excel file
