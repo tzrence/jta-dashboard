@@ -89,3 +89,31 @@ else:
 
 st.dataframe(
     filtered_df,
+    use_container_width=True
+)
+
+st.divider()
+
+# ===== INSIGHTS =====
+st.subheader("Fleet Insights")
+
+if not df.empty:
+
+    most_used = df.loc[
+        df["Miles This Month"].idxmax(),
+        "Vehicle"
+    ]
+
+    avg_miles = round(
+        df["Miles This Month"].mean(),
+        0
+    )
+
+    availability = round(
+        (active / total) * 100,
+        1
+    )
+
+    st.success(f"🏆 Most Utilized Vehicle: {most_used}")
+    st.info(f"📈 Average Monthly Mileage: {avg_miles}")
+    st.info(f"✅ Fleet Availability: {availability}%")
