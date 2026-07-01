@@ -11,7 +11,7 @@ df = pd.read_excel("fleet_data.xlsx")
 df.columns = df.columns.str.strip()
 
 total = len(df)
-active = len(df[df["Status"] == "Active"])
+active = len(df[df["status"] == "Active"])
 down = len(df[df["Status"] == "Down"])
 maintenance = len(df[df["Status"] == "Maintenance"])
 
