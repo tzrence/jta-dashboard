@@ -18,9 +18,9 @@ maintenance = len(df[df["Status"] == "Maintenance"])
 col1, col2, col3, col4 = st.columns(4)
 
 col1.metric("Total Vehicles", total)
-col2.metric("Active", Active)
-col3.metric("Down", Down)
-col4.metric("In Maintenance", Maintenance)
+col2.metric("Active", active)
+col3.metric("Down", down)
+col4.metric("In Maintenance", maintenance)
 
 st.divider()
 
