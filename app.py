@@ -7,7 +7,7 @@ st.set_page_config(
 )
 
 # ===== LOGO =====
-st.image("logo.jpg", width=200
+st.image("logo.jpg", width=200)
 
 # ===== LOGO =====
 st.sidebar.image("logo.jpg", width=180)
