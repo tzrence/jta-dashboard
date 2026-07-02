@@ -7,10 +7,8 @@ st.set_page_config(
 )
 
 # ===== LOGO =====
-st.image("logo.jpg", width=200)
-
-# ===== LOGO =====
-st.sidebar.image("logo.jpg", width=180)
+st.image("logowhite.jpg", width=200)
+st.sidebar.image("logogrey.jpg", width=180)
 
 # ===== NAVI HEADER =====
 st.markdown("""
