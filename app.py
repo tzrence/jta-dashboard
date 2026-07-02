@@ -1,5 +1,8 @@
 import streamlit as st
 import pandas as pd
+import os
+
+st.write(os.listdir())
 
 st.set_page_config(
     page_title="NAVI Fleet Operations Dashboard",
