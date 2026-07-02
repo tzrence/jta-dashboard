@@ -6,33 +6,20 @@ st.set_page_config(
     layout="wide"
 )
 
-# ===== SIDEBAR =====
-st.sidebar.image("navi_logo.jpg", width=180)
-st.sidebar.markdown("## NAVI Fleet")
-st.sidebar.markdown("Fleet Operations Dashboard")
-
-# ===== HEADER =====
-col1, col2 = st.columns([1, 5])
-
-with col1:
-    st.image("navi_logo.png", width=100)
-
-with col2:
-    st.title("🚍 NAVI Fleet Operations Dashboard")
-
-st.caption("Real-Time Fleet Availability & Utilization")
-
+# ===== NAVI HEADER =====
 st.markdown("""
 <div style="
 background-color:#003366;
-padding:10px;
+padding:15px;
 border-radius:10px;
 margin-bottom:20px;">
-<h3 style="color:white;text-align:center;">
-Fleet Performance & Operations Monitoring
-</h3>
+<h1 style="color:white;text-align:center;">
+🚍 NAVI Fleet Operations Dashboard
+</h1>
 </div>
 """, unsafe_allow_html=True)
+
+st.caption("Real-Time Fleet Availability & Utilization")
 
 # ===== LOAD DATA =====
 df = pd.read_excel("fleet_data.xlsx")
@@ -62,7 +49,7 @@ with col4:
 
 st.divider()
 
-# ===== STATUS CHART =====
+# ===== CHART =====
 st.subheader("Fleet Status Overview")
 
 status_counts = df["Status"].value_counts()
