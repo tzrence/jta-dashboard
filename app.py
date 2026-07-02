@@ -1,13 +1,13 @@
 import streamlit as st
 import pandas as pd
-import os
-
-st.write(os.listdir())
 
 st.set_page_config(
     page_title="NAVI Fleet Operations Dashboard",
     layout="wide"
 )
+
+# ===== LOGO =====
+st.sidebar.image("logo.jpg", width=180)
 
 # ===== NAVI HEADER =====
 st.markdown("""
