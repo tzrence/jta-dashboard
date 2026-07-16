@@ -127,11 +127,6 @@ with tab1:
     st.divider()
 
     display_df = grants.copy()
-        st.divider()
-
-
-    display_df = grants.copy()
-
 
     display_df["Status"] = display_df["Status"].replace({
         "Awarded": "🟢 Awarded",
