@@ -28,7 +28,7 @@ color:white;
 text-align:center;
 font-weight:bold;
 margin:0;">
-📋 NAVI Grant Management Dashboard
+NAVI Grant Management Dashboard
 </h1>
 
 <p style="
