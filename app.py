@@ -51,7 +51,7 @@ color:white;
 text-align:center;
 font-size:16px;
 margin-top:8px;">
-Grant Tracking & AI Grant Discovery
+Grant Management & Discovery
 </p>
 
 </div>
