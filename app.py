@@ -6,30 +6,15 @@ st.set_page_config(
     layout="wide"
 )
 
-# ===== LOGO ===== 
+# =========================
+# LOGO
+# =========================
 
 st.image("logowhite.jpg", width=200)
 
-# ===== BRANDING =====
-
-st.markdown("""
-<style>
-.main {
-    background-color: #F4F6F8;
-}
-
-h1 {
-    color: white;
-}
-
-.metric-box {
-    padding: 10px;
-    border-radius: 10px;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# ===== HEADER =====
+# =========================
+# HEADER
+# =========================
 
 st.markdown("""
 <div style="
@@ -51,13 +36,15 @@ color:white;
 text-align:center;
 font-size:16px;
 margin-top:8px;">
-Grant Management & Discovery
+Grant Management & AI Grant Discovery
 </p>
 
 </div>
 """, unsafe_allow_html=True)
 
-# ===== SAMPLE DATA =====
+# =========================
+# SAMPLE DATA
+# =========================
 
 grants = pd.DataFrame({
     "Grant Name": [
@@ -86,18 +73,17 @@ grants = pd.DataFrame({
     ]
 })
 
-# ===== TABS =====
+# =========================
+# TABS
+# =========================
 
 tab1, tab2 = st.tabs(
-    [
-        "📋 Grant Tracker",
-        "🤖 AI Grant Finder"
-    ]
+    ["📋 Grant Tracker", "🤖 AI Grant Finder"]
 )
 
-# ===================================
+# =========================
 # TAB 1
-# ===================================
+# =========================
 
 with tab1:
 
@@ -111,64 +97,47 @@ with tab1:
         grants[grants["Status"] == "Awarded"]
     )
 
-   potential_funding = grants["Amount"].sum()
+    potential_funding = grants["Amount"].sum()
 
-awarded_funding = grants[
-    grants["Status"] == "Awarded"
-]["Amount"].sum()
+    awarded_funding = grants[
+        grants["Status"] == "Awarded"
+    ]["Amount"].sum()
 
-c1, c2, c3, c4, c5 = st.columns(5)
+    c1, c2, c3, c4, c5 = st.columns(5)
 
-with c1:
-    st.info(f"📄 Total Grants\n\n{total_grants}")
+    with c1:
+        st.info(f"📄 Total Grants\n\n{total_grants}")
 
-with c2:
-    st.warning(f"🟡 In Progress\n\n{in_progress}")
+    with c2:
+        st.warning(f"🟡 In Progress\n\n{in_progress}")
 
-with c3:
-    st.success(f"🟢 Awarded\n\n{awarded}")
+    with c3:
+        st.success(f"🏆 Awarded\n\n{awarded}")
 
-with c4:
-    st.info(
-        f"💰 Potential Funding\n\n${potential_funding:,.0f}"
-    )
+    with c4:
+        st.info(
+            f"💰 Potential Funding\n\n${potential_funding:,.0f}"
+        )
 
-with c5:
-    st.success(
-        f"🏆 Awarded Funding\n\n${awarded_funding:,.0f}"
-    )
+    with c5:
+        st.success(
+            f"💵 Awarded Funding\n\n${awarded_funding:,.0f}"
+        )
 
     st.divider()
 
     display_df = grants.copy()
 
-    display_df["Status"] = display_df["Status"].replace({
-        "Awarded": "🟢 Awarded",
-        "Submitted": "✅ Submitted",
-        "In Progress": "🟡 In Progress",
-        "Not Started": "🔴 Not Started"
-    })
-
-    st.subheader("Grant Portfolio")
-
-    st.dataframe(
-        display_df,
-        use_container_width=True
-    )
-
-    st.subheader("Grant Status Overview")
-
-    st.bar_chart(
-        grants["Status"].value_counts()
-    )
-
 # ===================================
 # TAB 2
 # ===================================
 
+
 with tab2:
 
+
     st.subheader("AI Grant Discovery")
+
 
     organization_type = st.selectbox(
         "Organization Type",
@@ -180,41 +149,55 @@ with tab2:
         ]
     )
 
+
     keywords = st.text_input(
         "Keywords",
         placeholder="Electric buses, mobility, transportation"
     )
 
+
     if st.button("Find Opportunities"):
 
+
         st.success("Recommended Grants")
+
 
         st.markdown("""
 ### 🚍 FTA Low-No Emissions Program
 
+
 **Match Score:** 95%
+
 
 Supports fleet modernization,
 electric buses, and sustainable transit.
 
+
 **Potential Funding:** $2M+
         """)
+
 
         st.markdown("""
 ### 🏗️ RAISE Program
 
+
 **Match Score:** 89%
+
 
 Supports transportation infrastructure
 and mobility projects.
 
+
 **Potential Funding:** $1M+
         """)
+
 
         st.markdown("""
 ### 🌱 Clean Transportation Grant
 
+
 **Match Score:** 83%
+
 
 Supports emissions reduction projects
 and environmental initiatives.
