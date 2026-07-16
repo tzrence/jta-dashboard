@@ -127,6 +127,35 @@ with tab1:
     st.divider()
 
     display_df = grants.copy()
+        st.divider()
+
+
+    display_df = grants.copy()
+
+
+    display_df["Status"] = display_df["Status"].replace({
+        "Awarded": "🟢 Awarded",
+        "Submitted": "✅ Submitted",
+        "In Progress": "🟡 In Progress",
+        "Not Started": "🔴 Not Started"
+    })
+
+
+    st.subheader("Grant Portfolio")
+
+
+    st.dataframe(
+        display_df,
+        use_container_width=True
+    )
+
+
+    st.subheader("Grant Status Overview")
+
+
+    st.bar_chart(
+        grants["Status"].value_counts()
+    )
 
 # ===================================
 # TAB 2
