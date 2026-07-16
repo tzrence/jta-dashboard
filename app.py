@@ -6,6 +6,10 @@ st.set_page_config(
     layout="wide"
 )
 
+# ===== LOGO ===== 
+
+st.image("logowhite.jpg", width=200)
+
 # ===== BRANDING =====
 
 st.markdown("""
