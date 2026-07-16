@@ -33,17 +33,29 @@ h1 {
 
 st.markdown("""
 <div style="
-background-color:#0B1F3A;
-padding:15px;
+background-color:#003366;
+padding:20px;
 border-radius:10px;
 margin-bottom:20px;">
-<h1 style="text-align:center;">
-💰 NAVI Grant Management Dashboard
+
+<h1 style="
+color:white;
+text-align:center;
+font-weight:bold;
+margin:0;">
+📋 NAVI Grant Management Dashboard
 </h1>
+
+<p style="
+color:white;
+text-align:center;
+font-size:16px;
+margin-top:8px;">
+Grant Tracking & AI Grant Discovery
+</p>
+
 </div>
 """, unsafe_allow_html=True)
-
-st.caption("Track applications, deadlines, funding opportunities, and grant strategy")
 
 # ===== SAMPLE DATA =====
 
