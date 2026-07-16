@@ -111,23 +111,32 @@ with tab1:
         grants[grants["Status"] == "Awarded"]
     )
 
-    total_funding = grants["Amount"].sum()
+   potential_funding = grants["Amount"].sum()
 
-    c1, c2, c3, c4 = st.columns(4)
+awarded_funding = grants[
+    grants["Status"] == "Awarded"
+]["Amount"].sum()
 
-    with c1:
-        st.info(f"📄 Total Grants\n\n{total_grants}")
+c1, c2, c3, c4, c5 = st.columns(5)
 
-    with c2:
-        st.warning(f"🟡 In Progress\n\n{in_progress}")
+with c1:
+    st.info(f"📄 Total Grants\n\n{total_grants}")
 
-    with c3:
-        st.success(f"🟢 Awarded\n\n{awarded}")
+with c2:
+    st.warning(f"🟡 In Progress\n\n{in_progress}")
 
-    with c4:
-        st.success(
-            f"💰 Pipeline Value\n\n${total_funding:,.0f}"
-        )
+with c3:
+    st.success(f"🟢 Awarded\n\n{awarded}")
+
+with c4:
+    st.info(
+        f"💰 Potential Funding\n\n${potential_funding:,.0f}"
+    )
+
+with c5:
+    st.success(
+        f"🏆 Awarded Funding\n\n${awarded_funding:,.0f}"
+    )
 
     st.divider()
 
