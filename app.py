@@ -7,7 +7,8 @@ import pandas as pd
 
 st.set_page_config(
     page_title="NAVI Fleet Operations Dashboard",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 # =====================================
@@ -15,7 +16,10 @@ st.set_page_config(
 # =====================================
 
 st.image("logowhite.jpg", width=200)
-st.sidebar.image("logogrey.jpg", width=180)
+
+with st.sidebar:
+    st.image("logogrey.jpg", width=180)
+    st.header("Filters")
 
 # =====================================
 # HEADER
@@ -42,18 +46,30 @@ st.caption("Real-Time Fleet Availability & Utilization")
 # =====================================
 
 df = pd.read_excel("fleet_data.xlsx")
-
-# Clean column names
 df.columns = df.columns.str.strip()
 
 # =====================================
-# KPI SECTION
+# SIDEBAR FILTER
 # =====================================
 
-total = len(df)
-active = len(df[df["Status"] == "Active"])
-down = len(df[df["Status"] == "Down"])
-maintenance = len(df[df["Status"] == "Maintenance"])
+status_filter = st.sidebar.selectbox(
+    "Vehicle Status",
+    ["All", "Active", "Down", "Maintenance"]
+)
+
+if status_filter == "All":
+    filtered_df = df.copy()
+else:
+    filtered_df = df[df["Status"] == status_filter]
+
+# =====================================
+# KPIs
+# =====================================
+
+total = len(filtered_df)
+active = len(filtered_df[filtered_df["Status"] == "Active"])
+down = len(filtered_df[filtered_df["Status"] == "Down"])
+maintenance = len(filtered_df[filtered_df["Status"] == "Maintenance"])
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -77,17 +93,17 @@ st.divider()
 
 st.subheader("Fleet Status Overview")
 
-status_counts = df["Status"].value_counts()
+status_counts = filtered_df["Status"].value_counts()
 
 st.bar_chart(status_counts)
 
 st.divider()
 
 # =====================================
-# TABLE
+# MAIN TABLE
 # =====================================
 
-display_df = df.copy()
+display_df = filtered_df.copy()
 
 display_df["Status"] = display_df["Status"].replace({
     "Active": "🟢 Active",
@@ -99,28 +115,8 @@ st.subheader("Fleet Status Table")
 
 st.dataframe(
     display_df,
-    use_container_width=True
-)
-
-# =====================================
-# FILTER
-# =====================================
-
-st.subheader("Filter by Status")
-
-status_filter = st.selectbox(
-    "Choose Status",
-    ["All", "Active", "Down", "Maintenance"]
-)
-
-if status_filter == "All":
-    filtered_df = df
-else:
-    filtered_df = df[df["Status"] == status_filter]
-
-st.dataframe(
-    filtered_df,
-    use_container_width=True
+    use_container_width=True,
+    hide_index=True
 )
 
 st.divider()
@@ -131,23 +127,30 @@ st.divider()
 
 st.subheader("Fleet Insights")
 
-if not df.empty:
+if not filtered_df.empty:
 
-    most_used = df.loc[
-        df["Miles This Month"].idxmax(),
+    most_used = filtered_df.loc[
+        filtered_df["Miles This Month"].idxmax(),
         "Vehicle"
     ]
 
     avg_miles = round(
-        df["Miles This Month"].mean(),
+        filtered_df["Miles This Month"].mean(),
         0
     )
 
     availability = round(
         (active / total) * 100,
         1
-    )
+    ) if total > 0 else 0
 
-    st.success(f"🏆 Most Utilized Vehicle: {most_used}")
-    st.info(f"📈 Average Monthly Mileage: {avg_miles}")
-    st.info(f"✅ Fleet Availability: {availability}%")
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.success(f"🏆 Most Utilized Vehicle: {most_used}")
+
+    with col2:
+        st.info(f"📈 Average Monthly Mileage: {avg_miles}")
+
+    with col3:
+        st.info(f"✅ Fleet Availability: {availability}%")
