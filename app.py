@@ -22,7 +22,8 @@ fleet_df.columns = fleet_df.columns.str.strip()
 # ==========================================
 
 perf_df = pd.read_excel(
-    "Top performing Vehicle and other data analysis.xlsx"
+    "Top performing Vehicle and other data analysis.xlsx",
+    header=1
 )
 
 perf_df.columns = [
