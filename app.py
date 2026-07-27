@@ -30,8 +30,6 @@ perf_df.columns = [
     for col in perf_df.columns
 ]
 
-st.write("Performance File Columns:")
-st.write(perf_df.columns.tolist())
 
 # ==========================================
 # SIDEBAR
