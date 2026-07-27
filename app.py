@@ -305,7 +305,7 @@ elif page == "Performance & Insights":
 
     st.line_chart(
         perf_df.set_index("Date")
-        ["% Distance in Auto "]
+        ["% Distance in Auto"]
     )
 
     st.divider()
