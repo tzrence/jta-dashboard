@@ -25,17 +25,13 @@ perf_df = pd.read_excel(
     "Top performing Vehicle and other data analysis.xlsx"
 )
 
-perf_df.columns = perf_df.columns.str.strip()
+perf_df.columns = [
+    str(col).strip()
+    for col in perf_df.columns
+]
 
-# Remove Grand Total row
-perf_df = perf_df[
-    perf_df["Date"] != "Grand Total"
-].copy()
-
-perf_df["Date"] = pd.to_datetime(
-    perf_df["Date"],
-    errors="coerce"
-)
+st.write("Performance File Columns:")
+st.write(perf_df.columns.tolist())
 
 # ==========================================
 # SIDEBAR
