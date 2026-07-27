@@ -37,9 +37,9 @@ st.write(perf_df.columns.tolist())
 # SIDEBAR
 # ==========================================
 
-st.sidebar.image("logogrey.jpg", width=200)
+st.sidebar.image("logogrey.jpg", width=220)
 
-page = st.sidebar.radio(
+page = st.sidebar.selectbox(
     "Navigation",
     [
         "🏠 Home",
