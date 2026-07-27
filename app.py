@@ -174,6 +174,167 @@ if page == "Home":
             st.info(
                 f"✅ Fleet Availability: {availability}%"
             )
+            # ==========================================
+# RIDERSHIP PAGE
+# ==========================================
+
+elif page == "Ridership":
+
+    st.image("logowhite.jpg", width=200)
+
+    st.markdown("""
+    <div style="
+    background-color:#003366;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px;">
+
+    <h1 style="color:white;text-align:center;">
+    👥 NAVI Ridership Dashboard
+    </h1>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+    total_riders = perf_df["Total Ridership"].sum()
+
+    avg_riders = round(
+        perf_df["Total Ridership"].mean(),
+        1
+    )
+
+    highest_ridership = (
+        perf_df["Total Ridership"].max()
+    )
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric(
+            "Total Riders",
+            f"{int(total_riders):,}"
+        )
+
+    with col2:
+        st.metric(
+            "Average Daily Ridership",
+            avg_riders
+        )
+
+    with col3:
+        st.metric(
+            "Highest Daily Ridership",
+            int(highest_ridership)
+        )
+
+    st.divider()
+
+    st.subheader("Ridership Trend")
+
+    st.line_chart(
+        perf_df.set_index("Date")
+        ["Total Ridership"]
+    )
+
+    st.divider()
+
+    st.subheader("Ridership Data")
+
+    st.dataframe(
+        perf_df[
+            [
+                "Date",
+                "Total Ridership"
+            ]
+        ],
+        hide_index=True,
+        use_container_width=True
+    )
+
+# ==========================================
+# PERFORMANCE & INSIGHTS PAGE
+# ==========================================
+
+elif page == "Performance & Insights":
+
+    st.image("logowhite.jpg", width=200)
+
+    st.markdown("""
+    <div style="
+    background-color:#003366;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px;">
+
+    <h1 style="color:white;text-align:center;">
+    🏆 NAVI Performance & Insights
+    </h1>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+    avg_auto = (
+        perf_df["% Distance in Auto"].mean()
+        * 100
+    )
+
+    avg_brake = (
+        perf_df["Hard Brake %"].mean()
+        * 100
+    )
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.metric(
+            "Average Autonomous Distance",
+            f"{avg_auto:.1f}%"
+        )
+
+    with col2:
+        st.metric(
+            "Average Hard Brake Rate",
+            f"{avg_brake:.2f}%"
+        )
+
+    st.divider()
+
+    st.subheader(
+        "Autonomous Distance Trend"
+    )
+
+    st.line_chart(
+        perf_df.set_index("Date")
+        ["% Distance in Auto"]
+    )
+
+    st.divider()
+
+    st.subheader(
+        "Hard Brake Trend"
+    )
+
+    st.line_chart(
+        perf_df.set_index("Date")
+        ["Hard Brake %"]
+    )
+
+    st.divider()
+
+    st.subheader(
+        "Top Performing Vehicles"
+    )
+
+    st.dataframe(
+        perf_df[
+            [
+                "Date",
+                "Top Distance In Auto"
+            ]
+        ],
+        use_container_width=True,
+        hide_index=True
+    )
 
 # ==========================================
 # RIDERSHIP PAGE
