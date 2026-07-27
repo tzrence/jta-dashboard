@@ -30,9 +30,6 @@ perf_df.columns = [
     str(col).strip()
     for col in perf_df.columns
 ]
-perf_df["Date"] = pd.to_datetime(perf_df["Date"])
-
-perf_df = perf_df.sort_values("Date")
 
 
 # ==========================================
