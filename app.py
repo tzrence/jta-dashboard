@@ -11,149 +11,229 @@ st.set_page_config(
 )
 
 # =====================================
-# LOGOS
-# =====================================
-
-st.image("logowhite.jpg", width=200)
-
-# =====================================
-# HEADER
-# =====================================
-
-st.markdown("""
-<div style="
-background-color:#003366;
-padding:15px;
-border-radius:10px;
-margin-bottom:20px;">
-
-<h1 style="color:white;text-align:center;">
-🚍 NAVI Fleet Operations Dashboard
-</h1>
-
-</div>
-""", unsafe_allow_html=True)
-
-st.caption("Real-Time Fleet Availability & Utilization")
-
-# =====================================
 # LOAD DATA
 # =====================================
 
-df = pd.read_excel("fleet_data.xlsx")
-df.columns = df.columns.str.strip()
+fleet_df = pd.read_excel("fleet_data.xlsx")
+fleet_df.columns = fleet_df.columns.str.strip()
 
-# =====================================
-# KPI SECTION
-# =====================================
-
-total = len(df)
-active = len(df[df["Status"] == "Active"])
-down = len(df[df["Status"] == "Down"])
-maintenance = len(df[df["Status"] == "Maintenance"])
-
-col1, col2, col3, col4 = st.columns(4)
-
-with col1:
-    st.info(f"🚍 Total Vehicles: {total}")
-
-with col2:
-    st.success(f"🟢 Active: {active}")
-
-with col3:
-    st.error(f"🔴 Down: {down}")
-
-with col4:
-    st.warning(f"🟡 Maintenance: {maintenance}")
-
-st.divider()
-
-# =====================================
-# CHART
-# =====================================
-
-st.subheader("Fleet Status Overview")
-
-status_counts = df["Status"].value_counts()
-
-st.bar_chart(status_counts)
-
-st.divider()
-
-# =====================================
-# FILTER + TABLE
-# =====================================
-
-st.subheader("Fleet Status Table")
-
-status_filter = st.selectbox(
-    "Filter by Status",
-    ["All", "Active", "Down", "Maintenance"]
+perf_df = pd.read_excel(
+    "Top performing Vehicle and other data analysis.xlsx"
 )
 
-if status_filter == "All":
-    filtered_df = df.copy()
-else:
-    filtered_df = df[df["Status"] == status_filter]
+perf_df.columns = perf_df.columns.str.strip()
 
-display_df = filtered_df.copy()
+# Convert dates
+perf_df = perf_df[
+    perf_df["Date"] != "Grand Total"
+].copy()
 
-display_df["Status"] = display_df["Status"].replace({
-    "Active": "🟢 Active",
-    "Down": "🔴 Down",
-    "Maintenance": "🟡 Maintenance"
-})
-
-st.dataframe(
-    display_df,
-    use_container_width=True,
-    hide_index=True
+perf_df["Date"] = pd.to_datetime(
+    perf_df["Date"],
+    errors="coerce"
 )
 
-st.divider()
-
 # =====================================
-# INSIGHTS
+# SIDEBAR
 # =====================================
 
-st.subheader("Fleet Insights")
+st.sidebar.image("logogrey.jpg", width=200)
 
-if not filtered_df.empty:
-
-    most_used = filtered_df.loc[
-        filtered_df["Miles This Month"].idxmax(),
-        "Vehicle"
+page = st.sidebar.radio(
+    "Navigation",
+    [
+        "🏠 Home",
+        "👥 Ridership",
+        "🏆 Performance & Insights"
     ]
+)
 
-    avg_miles = round(
-        filtered_df["Miles This Month"].mean(),
-        0
+# =====================================
+# HOME PAGE
+# =====================================
+
+if page == "🏠 Home":
+
+    st.image("logowhite.jpg", width=200)
+
+    st.markdown("""
+    <div style="
+    background-color:#003366;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px;">
+
+    <h1 style="color:white;text-align:center;">
+    🚍 NAVI Fleet Operations Dashboard
+    </h1>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.caption("Real-Time Fleet Availability & Utilization")
+
+    total = len(fleet_df)
+    active = len(fleet_df[fleet_df["Status"] == "Active"])
+    down = len(fleet_df[fleet_df["Status"] == "Down"])
+    maintenance = len(
+        fleet_df[fleet_df["Status"] == "Maintenance"]
     )
 
-    filtered_active = len(
-        filtered_df[
-            filtered_df["Status"] == "Active"
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        st.metric("Total Vehicles", total)
+
+    with col2:
+        st.metric("Active", active)
+
+    with col3:
+        st.metric("Down", down)
+
+    with col4:
+        st.metric("Maintenance", maintenance)
+
+    st.divider()
+
+    st.subheader("Fleet Status Overview")
+
+    status_counts = fleet_df["Status"].value_counts()
+
+    st.bar_chart(status_counts)
+
+    st.divider()
+
+    st.subheader("Fleet Status Table")
+
+    status_filter = st.selectbox(
+        "Filter by Status",
+        ["All", "Active", "Down", "Maintenance"]
+    )
+
+    if status_filter == "All":
+        filtered_df = fleet_df.copy()
+    else:
+        filtered_df = fleet_df[
+            fleet_df["Status"] == status_filter
         ]
+
+    display_df = filtered_df.copy()
+
+    display_df["Status"] = display_df["Status"].replace({
+        "Active": "🟢 Active",
+        "Down": "🔴 Down",
+        "Maintenance": "🟡 Maintenance"
+    })
+
+    st.dataframe(
+        display_df,
+        use_container_width=True,
+        hide_index=True
     )
 
-    availability = round(
-        (filtered_active / len(filtered_df)) * 100,
+    st.divider()
+
+    st.subheader("Fleet Insights")
+
+    if not filtered_df.empty:
+
+        most_used = filtered_df.loc[
+            filtered_df[
+                "Miles This Month"
+            ].idxmax(),
+            "Vehicle"
+        ]
+
+        avg_miles = round(
+            filtered_df[
+                "Miles This Month"
+            ].mean(),
+            0
+        )
+
+        availability = round(
+            (
+                len(
+                    filtered_df[
+                        filtered_df["Status"] == "Active"
+                    ]
+                )
+                / len(filtered_df)
+            ) * 100,
+            1
+        )
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.success(
+                f"🏆 Most Utilized Vehicle: {most_used}"
+            )
+
+        with col2:
+            st.info(
+                f"📈 Average Mileage: {avg_miles:,.0f}"
+            )
+
+        with col3:
+            st.info(
+                f"✅ Availability: {availability}%"
+            )
+
+# =====================================
+# RIDERSHIP PAGE
+# =====================================
+
+elif page == "👥 Ridership":
+
+    st.title("👥 NAVI Ridership Analytics")
+
+    total_riders = int(
+        perf_df["Total Ridership"].sum()
+    )
+
+    avg_riders = round(
+        perf_df["Total Ridership"].mean(),
         1
     )
+
+    peak_day = perf_df.loc[
+        perf_df["Total Ridership"].idxmax()
+    ]
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.success(
-            f"🏆 Most Utilized Vehicle: {most_used}"
+        st.metric(
+            "Total Riders",
+            f"{total_riders:,}"
         )
 
     with col2:
-        st.info(
-            f"📈 Average Monthly Mileage: {avg_miles:,.0f}"
+        st.metric(
+            "Average Daily Ridership",
+            avg_riders
         )
 
     with col3:
-        st.info(
-            f"✅ Fleet Availability: {availability}%"
+        st.metric(
+            "Peak Daily Ridership",
+            int(peak_day["Total Ridership"])
         )
+
+    st.divider()
+
+    st.subheader("Daily Ridership Trend")
+
+    st.line_chart(
+        perf_df.set_index("Date")[
+            "Total Ridership"
+        ]
+    )
+
+    st.divider()
+
+    perf_df["Month"] = (
+        perf_df["Date"]
+        .dt.to_period("M")
+     
