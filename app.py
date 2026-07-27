@@ -383,7 +383,7 @@ st.subheader(
 
 st.bar_chart(
     leaderboard
-    .head(12)
+    .head(14)
     .set_index("Vehicle")
 )
 
