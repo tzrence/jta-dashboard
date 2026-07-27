@@ -42,9 +42,9 @@ st.sidebar.image("logogrey.jpg", width=220)
 page = st.sidebar.selectbox(
     "Navigation",
     [
-        "🏠 Home",
-        "👥 Ridership",
-        "🏆 Performance & Insights"
+        "Home",
+        "Ridership",
+        "Performance & Insights"
     ]
 )
 
@@ -52,7 +52,7 @@ page = st.sidebar.selectbox(
 # HOME PAGE
 # ==========================================
 
-if page == "🏠 Home":
+if page == "Home":
 
     st.image("logowhite.jpg", width=200)
 
