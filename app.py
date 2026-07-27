@@ -1,21 +1,25 @@
 import streamlit as st
 import pandas as pd
 
-# =====================================
+# ==========================================
 # PAGE CONFIG
-# =====================================
+# ==========================================
 
 st.set_page_config(
     page_title="NAVI Fleet Operations Dashboard",
     layout="wide"
 )
 
-# =====================================
-# LOAD DATA
-# =====================================
+# ==========================================
+# LOAD FLEET DATA
+# ==========================================
 
 fleet_df = pd.read_excel("fleet_data.xlsx")
 fleet_df.columns = fleet_df.columns.str.strip()
+
+# ==========================================
+# LOAD RIDERSHIP / PERFORMANCE DATA
+# ==========================================
 
 perf_df = pd.read_excel(
     "Top performing Vehicle and other data analysis.xlsx"
@@ -23,7 +27,7 @@ perf_df = pd.read_excel(
 
 perf_df.columns = perf_df.columns.str.strip()
 
-# Convert dates
+# Remove Grand Total row
 perf_df = perf_df[
     perf_df["Date"] != "Grand Total"
 ].copy()
@@ -33,9 +37,9 @@ perf_df["Date"] = pd.to_datetime(
     errors="coerce"
 )
 
-# =====================================
+# ==========================================
 # SIDEBAR
-# =====================================
+# ==========================================
 
 st.sidebar.image("logogrey.jpg", width=200)
 
@@ -48,9 +52,9 @@ page = st.sidebar.radio(
     ]
 )
 
-# =====================================
+# ==========================================
 # HOME PAGE
-# =====================================
+# ==========================================
 
 if page == "🏠 Home":
 
@@ -85,10 +89,10 @@ if page == "🏠 Home":
         st.metric("Total Vehicles", total)
 
     with col2:
-        st.metric("Active", active)
+        st.metric("Active Vehicles", active)
 
     with col3:
-        st.metric("Down", down)
+        st.metric("Down Vehicles", down)
 
     with col4:
         st.metric("Maintenance", maintenance)
@@ -138,16 +142,12 @@ if page == "🏠 Home":
     if not filtered_df.empty:
 
         most_used = filtered_df.loc[
-            filtered_df[
-                "Miles This Month"
-            ].idxmax(),
+            filtered_df["Miles This Month"].idxmax(),
             "Vehicle"
         ]
 
         avg_miles = round(
-            filtered_df[
-                "Miles This Month"
-            ].mean(),
+            filtered_df["Miles This Month"].mean(),
             0
         )
 
@@ -172,68 +172,13 @@ if page == "🏠 Home":
 
         with col2:
             st.info(
-                f"📈 Average Mileage: {avg_miles:,.0f}"
+                f"📈 Average Monthly Mileage: {avg_miles:,.0f}"
             )
 
         with col3:
             st.info(
-                f"✅ Availability: {availability}%"
+                f"✅ Fleet Availability: {availability}%"
             )
 
-# =====================================
+# ==========================================
 # RIDERSHIP PAGE
-# =====================================
-
-elif page == "👥 Ridership":
-
-    st.title("👥 NAVI Ridership Analytics")
-
-    total_riders = int(
-        perf_df["Total Ridership"].sum()
-    )
-
-    avg_riders = round(
-        perf_df["Total Ridership"].mean(),
-        1
-    )
-
-    peak_day = perf_df.loc[
-        perf_df["Total Ridership"].idxmax()
-    ]
-
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.metric(
-            "Total Riders",
-            f"{total_riders:,}"
-        )
-
-    with col2:
-        st.metric(
-            "Average Daily Ridership",
-            avg_riders
-        )
-
-    with col3:
-        st.metric(
-            "Peak Daily Ridership",
-            int(peak_day["Total Ridership"])
-        )
-
-    st.divider()
-
-    st.subheader("Daily Ridership Trend")
-
-    st.line_chart(
-        perf_df.set_index("Date")[
-            "Total Ridership"
-        ]
-    )
-
-    st.divider()
-
-    perf_df["Month"] = (
-        perf_df["Date"]
-        .dt.to_period("M")
-     
