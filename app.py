@@ -239,7 +239,7 @@ elif page == "Ridership":
 with col1:
     st.metric(
         "Total Riders",
-        f"{total_riders:,}"
+        f"{total_riders:}"
     )
 
 with col2:
