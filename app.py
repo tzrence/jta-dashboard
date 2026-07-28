@@ -395,12 +395,13 @@ elif page == "Performance & Insights":
 
     st.success(
         f"""
-        🥇 Fleet Champion Vehicle
+        🥇 Most Consistent Autonomous Vehicle
 
         {best_vehicle['Vehicle']}
 
-        Appeared in the Top 3
-        {best_vehicle['Top 3 Appearances']} times.
+        Ranked among NAVI's Top 3 daily-performing
+        autonomous vehicles on
+        {best_vehicle['Top 3 Appearances']} operating days.
         """
     )
 
