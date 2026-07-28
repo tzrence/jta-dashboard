@@ -387,7 +387,7 @@ elif page == "Performance & Insights":
     )
 
     leaderboard = leaderboard.sort_values(
-        "Top 3 Appearances",
+        "Top Performing Days",
         ascending=False
     )
 
@@ -395,7 +395,7 @@ elif page == "Performance & Insights":
 
     st.success(
         f"""
-        🥇 Fleet Champion Vehicle
+        🥇 Most Reliable Vehicle
 
         {best_vehicle['Vehicle']}
 
