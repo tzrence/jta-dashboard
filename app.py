@@ -233,32 +233,33 @@ elif page == "Ridership":
     lowest_ridership = int(
         perf_df["Total Ridership"].min()
     )
-    
+
     col1, col2, col3, col4 = st.columns(4)
 
-with col1:
-    st.metric(
-        "Total Riders",
-        f"{total_riders:}"
-    )
+    with col1:
+        st.metric(
+            "Total Riders",
+            f"{total_riders:,}"
+        )
 
-with col2:
-    st.metric(
-        "Average Daily Ridership",
-        avg_riders
-    )
+    with col2:
+        st.metric(
+            "Average Daily Ridership",
+            avg_riders
+        )
 
-with col3:
-    st.metric(
-        "Highest Daily Ridership",
-        highest_ridership
-    )
+    with col3:
+        st.metric(
+            "Highest Daily Ridership",
+            highest_ridership
+        )
 
-with col4:
-    st.metric(
-        "Lowest Daily Ridership",
-        lowest_ridership
-    )
+    with col4:
+        st.metric(
+            "Lowest Daily Ridership",
+            lowest_ridership
+        )
+        
     st.divider()
 
     st.subheader("Ridership Trend")
