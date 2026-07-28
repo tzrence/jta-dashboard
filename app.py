@@ -661,7 +661,7 @@ elif page == "Performance & Insights":
     )
 
     st.dataframe(
-        safety_results.head(10),
+        safety_results.head(14),
         hide_index=True,
         use_container_width=True
     )
