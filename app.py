@@ -250,6 +250,11 @@ elif page == "Ridership":
         monthly_ridership.max()
     )
 
+    best_month_display = (
+        best_month
+        .strftime("%B %Y")
+    )
+
     # Growth Rate
 
     if len(monthly_ridership) >= 2:
@@ -456,7 +461,7 @@ elif page == "Ridership":
             f"""
             🏆 Best Ridership Month
 
-            {best_month}
+            {best_month_display}
 
             Total Riders:
             {best_month_total:,}
@@ -467,10 +472,11 @@ elif page == "Ridership":
 
         st.success(
             f"""
-            📅 Best Ridership Week
+            📅 Highest Ridership Week
     
+            Week of:
             {week_start.strftime('%B %d, %Y')}
-            -
+            through
             {best_week_date.strftime('%B %d, %Y')}
     
             Total Riders:
