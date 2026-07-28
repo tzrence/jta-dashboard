@@ -401,17 +401,6 @@ elif page == "Performance & Insights":
 
     st.divider()
 
-    st.subheader(
-        "Hard Brake Trend"
-    )
-
-    st.line_chart(
-        perf_df.set_index("Date")
-        ["Hard Brake %"]
-    )
-
-    st.divider()
-
     # ==========================================
     # MONTHLY PERFORMANCE
     # ==========================================
@@ -575,6 +564,17 @@ elif page == "Performance & Insights":
         ),
         use_container_width=True,
         hide_index=True
+    )
+
+    st.divider()
+    
+    st.subheader(
+        "Hard Brake Trend"
+    )
+
+    st.line_chart(
+        perf_df.set_index("Date")
+        ["Hard Brake %"]
     )
 
     st.divider()
