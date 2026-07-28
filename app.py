@@ -422,11 +422,17 @@ elif page == "Performance & Insights":
         "🏆 Vehicle Leaderboard"
     )
 
-    st.dataframe(
-        leaderboard,
-        use_container_width=True,
-        hide_index=True
-    )
+   st.dataframe(
+    leaderboard.rename(
+        columns={
+            "Top 3 Appearances":
+            "Days Ranked Among Top Performers"
+        }
+    ),
+    use_container_width=True,
+    hide_index=True
+)
+
 
 # ==========================================
 # RIDERSHIP PAGE
