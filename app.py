@@ -397,6 +397,9 @@ elif page == "Ridership":
             "Growth Rate",
             f"{growth_rate:.1f}%"
         )
+        st.caption(
+    "Compared to the previous operating month"
+)
 
     with col2:
         st.metric(
