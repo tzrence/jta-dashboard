@@ -382,7 +382,7 @@ elif page == "Performance & Insights":
         vehicle_counts.items(),
         columns=[
             "Vehicle",
-            "Top 3 Appearances"
+            "Days as a Top Performer"
         ]
     )
 
@@ -399,7 +399,7 @@ elif page == "Performance & Insights":
 
         {best_vehicle['Vehicle']}
 
-        Appeared in the Top 3
+        Appeared in the Top 3 daily performing vehicles
         {best_vehicle['Top 3 Appearances']} times.
         """
     )
