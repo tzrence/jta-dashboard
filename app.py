@@ -197,10 +197,6 @@ if page == "Home":
             st.info(
                 f"✅ Fleet Availability: {availability}%"
             )
-            # ==========================================
-# RIDERSHIP PAGE
-# ==========================================
-
 elif page == "Ridership":
 
     st.image("logowhite.jpg", width=200)
@@ -219,20 +215,136 @@ elif page == "Ridership":
     </div>
     """, unsafe_allow_html=True)
 
-    total_riders = perf_df["Total Ridership"].sum()
+    # ==========================================
+    # RIDERSHIP CALCULATIONS
+    # ==========================================
+
+    total_riders = int(
+        perf_df["Total Ridership"].sum()
+    )
 
     avg_riders = round(
         perf_df["Total Ridership"].mean(),
         1
     )
 
-    highest_ridership = (
+    highest_ridership = int(
         perf_df["Total Ridership"].max()
     )
 
     lowest_ridership = int(
         perf_df["Total Ridership"].min()
     )
+
+    # Monthly Ridership
+
+    monthly_ridership = (
+        perf_df.groupby(
+            perf_df["Date"].dt.to_period("M")
+        )["Total Ridership"]
+        .sum()
+    )
+
+    best_month = monthly_ridership.idxmax()
+    best_month_total = int(
+        monthly_ridership.max()
+    )
+
+    # Growth Rate
+
+    if len(monthly_ridership) >= 2:
+
+        growth_rate = (
+            (
+                monthly_ridership.iloc[-1]
+                -
+                monthly_ridership.iloc[-2]
+            )
+            /
+            monthly_ridership.iloc[-2]
+        ) * 100
+
+    else:
+
+        growth_rate = 0
+
+    # Best Week
+
+    weekly_ridership = (
+        perf_df.set_index("Date")
+        .resample("W")
+        ["Total Ridership"]
+        .sum()
+    )
+
+    best_week_total = int(
+        weekly_ridership.max()
+    )
+
+    # Days Above 100
+
+    days_above_100 = len(
+        perf_df[
+            perf_df["Total Ridership"] > 100
+        ]
+    )
+
+    # Best Day Of Week
+
+    weekday_avg = (
+        perf_df.groupby(
+            perf_df["Date"]
+            .dt.day_name()
+        )["Total Ridership"]
+        .mean()
+    )
+
+    best_weekday = (
+        weekday_avg.idxmax()
+    )
+
+    best_weekday_avg = round(
+        weekday_avg.max(),
+        1
+    )
+
+    # ==========================================
+    # RIDERSHIP HEALTH SCORE
+    # ==========================================
+
+    score = 0
+
+    score += min(avg_riders, 100) * 0.4
+
+    score += min(days_above_100, 25)
+
+    score += max(
+        min(growth_rate, 25),
+        0
+    )
+
+    score += 10 if avg_riders > 75 else 0
+
+    score = round(
+        min(score, 100),
+        0
+    )
+
+    if score >= 90:
+        score_status = "Excellent"
+
+    elif score >= 80:
+        score_status = "Strong"
+
+    elif score >= 70:
+        score_status = "Moderate"
+
+    else:
+        score_status = "Needs Attention"
+
+    # ==========================================
+    # KPI ROW
+    # ==========================================
 
     col1, col2, col3, col4 = st.columns(4)
 
@@ -256,11 +368,59 @@ elif page == "Ridership":
 
     with col4:
         st.metric(
+            "Ridership Health Score",
+            f"{score}/100"
+        )
+
+    st.info(
+        f"""
+        Ridership Health Score Status: **{score_status}**
+
+        Score Factors:
+        • Average Daily Ridership
+        • Ridership Growth Rate
+        • Number of 100+ Rider Days
+        • Overall Ridership Performance
+        """
+    )
+
+    st.divider()
+
+    # ==========================================
+    # ADDITIONAL INSIGHTS
+    # ==========================================
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        st.metric(
+            "Growth Rate",
+            f"{growth_rate:.1f}%"
+        )
+
+    with col2:
+        st.metric(
+            "100+ Rider Days",
+            days_above_100
+        )
+
+    with col3:
+        st.metric(
+            "Best Weekday",
+            best_weekday
+        )
+
+    with col4:
+        st.metric(
             "Lowest Daily Ridership",
             lowest_ridership
         )
-        
+
     st.divider()
+
+    # ==========================================
+    # CHART
+    # ==========================================
 
     st.subheader("Ridership Trend")
 
@@ -270,6 +430,42 @@ elif page == "Ridership":
     )
 
     st.divider()
+
+    # ==========================================
+    # BEST MONTH / WEEK
+    # ==========================================
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+
+        st.success(
+            f"""
+            🏆 Best Ridership Month
+
+            {best_month}
+
+            Total Riders:
+            {best_month_total:,}
+            """
+        )
+
+    with col2:
+
+        st.success(
+            f"""
+            📅 Best Ridership Week
+
+            Total Riders:
+            {best_week_total:,}
+            """
+        )
+
+    st.divider()
+
+    # ==========================================
+    # DATA TABLE
+    # ==========================================
 
     st.subheader("Ridership Data")
 
@@ -283,6 +479,65 @@ elif page == "Ridership":
         hide_index=True,
         use_container_width=True
     )
+
+    st.divider()
+
+    # ==========================================
+    # EXECUTIVE SUMMARY
+    # ==========================================
+
+    st.subheader("📝 Executive Summary")
+
+    st.success(
+        f"""
+        • Total riders served: {total_riders:,}
+
+        • Average daily ridership: {avg_riders}
+
+        • Ridership growth rate: {growth_rate:.1f}%
+
+        • Best ridership month:
+        {best_month} ({best_month_total:,} riders)
+
+        • {days_above_100} operating days
+        exceeded 100 riders.
+
+        • Highest average ridership occurs
+        on {best_weekday}s
+        ({best_weekday_avg} riders).
+        """
+    )
+
+    # ==========================================
+    # AREAS FOR IMPROVEMENT
+    # ==========================================
+
+    st.subheader("🎯 Areas for Improvement")
+
+    improvements = []
+
+    if growth_rate < 0:
+        improvements.append(
+            f"Ridership declined {abs(growth_rate):.1f}% from the previous month."
+        )
+
+    if avg_riders < 75:
+        improvements.append(
+            "Average daily ridership remains below the 75-rider target."
+        )
+
+    if days_above_100 < 20:
+        improvements.append(
+            "Increase the number of operating days exceeding 100 riders."
+        )
+
+    if not improvements:
+        improvements.append(
+            "No major ridership concerns identified."
+        )
+
+    for item in improvements:
+        st.warning(item)
 
 # ==========================================
 # PERFORMANCE & INSIGHTS PAGE
