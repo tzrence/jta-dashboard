@@ -354,9 +354,9 @@ elif page == "Performance & Insights":
 
     st.divider()
 
+        # ==========================================
+    # VEHICLE PERFORMANCE LEADERBOARD
     # ==========================================
-# VEHICLE PERFORMANCE LEADERBOARD
-# ==========================================
 
     vehicle_counts = {}
 
@@ -375,8 +375,8 @@ elif page == "Performance & Insights":
 
                 if vehicle_name in vehicle_counts:
                     vehicle_counts[vehicle_name] += 1
-            else:
-                vehicle_counts[vehicle_name] = 1
+                else:
+                    vehicle_counts[vehicle_name] = 1
 
     leaderboard = pd.DataFrame(
         vehicle_counts.items(),
@@ -390,8 +390,6 @@ elif page == "Performance & Insights":
         "Top 3 Appearances",
         ascending=False
     )
-
-# Champion Vehicle
 
     best_vehicle = leaderboard.iloc[0]
 
@@ -408,8 +406,6 @@ elif page == "Performance & Insights":
 
     st.divider()
 
-# Bar Chart
-
     st.subheader(
         "📊 Top Performing Vehicles"
     )
@@ -421,8 +417,6 @@ elif page == "Performance & Insights":
     )
 
     st.divider()
-
-# Leaderboard Table
 
     st.subheader(
         "🏆 Vehicle Leaderboard"
