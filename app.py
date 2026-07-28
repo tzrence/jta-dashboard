@@ -306,7 +306,7 @@ elif page == "Performance & Insights":
     </div>
     """, unsafe_allow_html=True)
 
-        avg_auto = (
+    avg_auto = (
         perf_df["% Distance in Auto"].mean()
         * 100
     )
