@@ -276,6 +276,18 @@ elif page == "Ridership":
         ["Total Ridership"]
         .sum()
     )
+    
+    best_week_date = weekly_ridership.idxmax()
+    
+    best_week_total = int(
+        weekly_ridership.max()
+    )
+    
+    week_start = (
+        best_week_date -
+        pd.Timedelta(days=6)
+    )
+
 
     best_week_total = int(
         weekly_ridership.max()
@@ -456,7 +468,11 @@ elif page == "Ridership":
         st.success(
             f"""
             📅 Best Ridership Week
-
+    
+            {week_start.strftime('%B %d, %Y')}
+            -
+            {best_week_date.strftime('%B %d, %Y')}
+    
             Total Riders:
             {best_week_total:,}
             """
