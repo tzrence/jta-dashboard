@@ -230,6 +230,10 @@ elif page == "Ridership":
         perf_df["Total Ridership"].max()
     )
 
+    lowest_ridership = int(
+        perf_df["Total Ridership"].min()
+    )
+    
     col1, col2, col3 = st.columns(3)
 
     with col1:
