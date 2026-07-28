@@ -306,7 +306,7 @@ elif page == "Performance & Insights":
     </div>
     """, unsafe_allow_html=True)
 
-    avg_auto = (
+        avg_auto = (
         perf_df["% Distance in Auto"].mean()
         * 100
     )
@@ -316,7 +316,49 @@ elif page == "Performance & Insights":
         * 100
     )
 
-    col1, col2 = st.columns(2)
+    # ==========================================
+    # PERFORMANCE GRADE
+    # ==========================================
+
+    if avg_auto >= 90:
+        grade = "A"
+
+    elif avg_auto >= 80:
+        grade = "B"
+
+    elif avg_auto >= 70:
+        grade = "C"
+
+    else:
+        grade = "D"
+
+    # ==========================================
+    # LONGEST 90%+ STREAK
+    # ==========================================
+
+    perf_df["Above90"] = (
+        perf_df["% Distance in Auto"] >= 0.90
+    )
+
+    longest_streak = 0
+    current_streak = 0
+
+    for value in perf_df["Above90"]:
+
+        if value:
+            current_streak += 1
+            longest_streak = max(
+                longest_streak,
+                current_streak
+            )
+        else:
+            current_streak = 0
+
+    # ==========================================
+    # KPI ROW
+    # ==========================================
+
+    col1, col2, col3, col4 = st.columns(4)
 
     with col1:
         st.metric(
@@ -330,7 +372,23 @@ elif page == "Performance & Insights":
             f"{avg_brake:.2f}%"
         )
 
+    with col3:
+        st.metric(
+            "Performance Grade",
+            grade
+        )
+
+    with col4:
+        st.metric(
+            "Longest 90%+ Streak",
+            f"{longest_streak} Days"
+        )
+
     st.divider()
+
+    # ==========================================
+    # TRENDS
+    # ==========================================
 
     st.subheader(
         "Autonomous Distance Trend"
@@ -354,13 +412,92 @@ elif page == "Performance & Insights":
 
     st.divider()
 
-        # ==========================================
-    # VEHICLE PERFORMANCE LEADERBOARD
+    # ==========================================
+    # MONTHLY PERFORMANCE
+    # ==========================================
+
+    monthly_auto = (
+        perf_df.groupby(
+            perf_df["Date"]
+            .dt.strftime("%B %Y")
+        )["% Distance in Auto"]
+        .mean()
+        .mul(100)
+    )
+
+    best_months = (
+        monthly_auto
+        .sort_values(
+            ascending=False
+        )
+        .head(5)
+    )
+
+    worst_months = (
+        monthly_auto
+        .sort_values(
+            ascending=True
+        )
+        .head(5)
+    )
+
+    st.subheader(
+        "📅 Monthly Performance"
+    )
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+
+        st.subheader(
+            "🏆 Best Months"
+        )
+
+        st.dataframe(
+            best_months
+            .reset_index()
+            .rename(
+                columns={
+                    "Date":"Month",
+                    "% Distance in Auto":
+                    "Average Auto %"
+                }
+            ),
+            hide_index=True,
+            use_container_width=True
+        )
+
+    with col2:
+
+        st.subheader(
+            "⚠️ Lowest Months"
+        )
+
+        st.dataframe(
+            worst_months
+            .reset_index()
+            .rename(
+                columns={
+                    "Date":"Month",
+                    "% Distance in Auto":
+                    "Average Auto %"
+                }
+            ),
+            hide_index=True,
+            use_container_width=True
+        )
+
+    st.divider()
+
+    # ==========================================
+    # VEHICLE LEADERBOARD
     # ==========================================
 
     vehicle_counts = {}
 
-    for row in perf_df["Top Distance In Auto"]:
+    for row in perf_df[
+        "Top Distance In Auto"
+    ]:
 
         vehicles = str(row).split("\n")
 
@@ -374,9 +511,13 @@ elif page == "Performance & Insights":
             if vehicle_name:
 
                 if vehicle_name in vehicle_counts:
-                    vehicle_counts[vehicle_name] += 1
+                    vehicle_counts[
+                        vehicle_name
+                    ] += 1
                 else:
-                    vehicle_counts[vehicle_name] = 1
+                    vehicle_counts[
+                        vehicle_name
+                    ] = 1
 
     leaderboard = pd.DataFrame(
         vehicle_counts.items(),
@@ -399,9 +540,11 @@ elif page == "Performance & Insights":
 
         {best_vehicle['Vehicle']}
 
-        Ranked among NAVI's Top 3 daily-performing
-        autonomous vehicles on
-        {best_vehicle['Top 3 Appearances']} operating days.
+        Ranked among NAVI's Top 3
+        daily-performing autonomous
+        vehicles on
+        {best_vehicle['Top 3 Appearances']}
+        operating days.
         """
     )
 
@@ -434,6 +577,89 @@ elif page == "Performance & Insights":
         hide_index=True
     )
 
+    st.divider()
 
-# ==========================================
-# RIDERSHIP PAGE
+    # ==========================================
+    # SAFETY LEADERBOARD
+    # ==========================================
+
+    vehicle_safety = {}
+
+    for _, row in perf_df.iterrows():
+
+        vehicles = str(
+            row["Top Distance In Auto"]
+        ).split("\n")
+
+        for vehicle in vehicles:
+
+            vehicle_name = (
+                vehicle.split("–")[0]
+                .strip()
+            )
+
+            if vehicle_name:
+
+                if vehicle_name not in vehicle_safety:
+
+                    vehicle_safety[
+                        vehicle_name
+                    ] = []
+
+                vehicle_safety[
+                    vehicle_name
+                ].append(
+                    row["Hard Brake %"]
+                )
+
+    safety_results = []
+
+    for vehicle, brakes in (
+        vehicle_safety.items()
+    ):
+
+        average_brake = (
+            sum(brakes)
+            / len(brakes)
+        )
+
+        safety_score = (
+            100 -
+            (average_brake * 1000)
+        )
+
+        safety_results.append(
+            [
+                vehicle,
+                round(
+                    safety_score,
+                    1
+                )
+            ]
+        )
+
+    safety_results = pd.DataFrame(
+        safety_results,
+        columns=[
+            "Vehicle",
+            "Safety Score"
+        ]
+    )
+
+    safety_results = (
+        safety_results
+        .sort_values(
+            "Safety Score",
+            ascending=False
+        )
+    )
+
+    st.subheader(
+        "🛡️ Safest Vehicles"
+    )
+
+    st.dataframe(
+        safety_results.head(10),
+        hide_index=True,
+        use_container_width=True
+    )
