@@ -376,11 +376,9 @@ elif page == "Ridership":
         f"""
         Ridership Health Score Status: **{score_status}**
 
-        Score Factors:
-        • Average Daily Ridership
-        • Ridership Growth Rate
-        • Number of 100+ Rider Days
-        • Overall Ridership Performance
+        *Ridership Health Score is determined by average daily ridership,
+        month-over-month ridership growth, the number of 100+ rider days,
+        and overall ridership performance trends.
         """
     )
 
