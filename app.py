@@ -31,6 +31,29 @@ perf_df.columns = [
     for col in perf_df.columns
 ]
 
+# Remove Grand Total row
+
+perf_df = perf_df[
+    perf_df["Date"] != "Grand Total"
+].copy()
+
+# Convert data types
+
+perf_df["Date"] = pd.to_datetime(
+    perf_df["Date"],
+    errors="coerce"
+)
+
+perf_df["Total Ridership"] = pd.to_numeric(
+    perf_df["Total Ridership"],
+    errors="coerce"
+)
+
+# Sort chronologically
+
+perf_df = perf_df.sort_values(
+    "Date"
+)
 
 # ==========================================
 # SIDEBAR
