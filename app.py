@@ -608,11 +608,15 @@ elif page == "Performance & Insights":
                         vehicle_name
                     ] = []
 
-                vehicle_safety[
-                    vehicle_name
-                ].append(
+                if pd.notna(
                     row["Hard Brake %"]
-                )
+                ):
+
+                    vehicle_safety[
+                        vehicle_name
+                    ].append(
+                        row["Hard Brake %"]
+                    )
 
     safety_results = []
 
@@ -620,22 +624,20 @@ elif page == "Performance & Insights":
         vehicle_safety.items()
     ):
 
+        if len(brakes) == 0:
+            continue
+
         average_brake = (
             sum(brakes)
             / len(brakes)
-        )
-
-        safety_score = (
-            100 -
-            (average_brake * 1000)
-        )
+        ) * 100
 
         safety_results.append(
             [
                 vehicle,
                 round(
-                    safety_score,
-                    1
+                    average_brake,
+                    2
                 )
             ]
         )
@@ -644,24 +646,39 @@ elif page == "Performance & Insights":
         safety_results,
         columns=[
             "Vehicle",
-            "Safety Score"
+            "Average Hard Brake %"
         ]
     )
 
     safety_results = (
         safety_results
         .sort_values(
-            "Safety Score",
-            ascending=False
+            "Average Hard Brake %",
+            ascending=True
         )
+    )
+
+    safest_vehicle = (
+        safety_results.iloc[0]
     )
 
     st.subheader(
         "🛡️ Safest Vehicles"
     )
 
+    st.success(
+        f"""
+        🥇 Safest Vehicle
+
+        {safest_vehicle['Vehicle']}
+
+        Average Hard Brake Rate:
+        {safest_vehicle['Average Hard Brake %']}%
+        """
+    )
+
     st.dataframe(
-        safety_results.head(14),
+        safety_results.head(10),
         hide_index=True,
         use_container_width=True
     )
