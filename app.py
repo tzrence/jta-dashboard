@@ -357,81 +357,81 @@ elif page == "Performance & Insights":
 # VEHICLE PERFORMANCE LEADERBOARD
 # ==========================================
 
-vehicle_counts = {}
+    vehicle_counts = {}
 
-for row in perf_df["Top Distance In Auto"]:
+    for row in perf_df["Top Distance In Auto"]:
 
-    vehicles = str(row).split("\n")
+        vehicles = str(row).split("\n")
 
-    for vehicle in vehicles:
+        for vehicle in vehicles:
 
-        vehicle_name = (
-            vehicle.split("–")[0]
-            .strip()
-        )
+            vehicle_name = (
+                vehicle.split("–")[0]
+                .strip()
+            )
 
-        if vehicle_name:
+            if vehicle_name:
 
-            if vehicle_name in vehicle_counts:
-                vehicle_counts[vehicle_name] += 1
+                if vehicle_name in vehicle_counts:
+                    vehicle_counts[vehicle_name] += 1
             else:
                 vehicle_counts[vehicle_name] = 1
 
-leaderboard = pd.DataFrame(
-    vehicle_counts.items(),
-    columns=[
-        "Vehicle",
-        "Top 3 Appearances"
-    ]
-)
+    leaderboard = pd.DataFrame(
+        vehicle_counts.items(),
+        columns=[
+            "Vehicle",
+            "Top 3 Appearances"
+        ]
+    )
 
-leaderboard = leaderboard.sort_values(
-    "Top 3 Appearances",
-    ascending=False
-)
+    leaderboard = leaderboard.sort_values(
+        "Top 3 Appearances",
+        ascending=False
+    )
 
 # Champion Vehicle
 
-best_vehicle = leaderboard.iloc[0]
+    best_vehicle = leaderboard.iloc[0]
 
-st.success(
-    f"""
-    🥇 Fleet Champion Vehicle
+    st.success(
+        f"""
+        🥇 Fleet Champion Vehicle
 
-    {best_vehicle['Vehicle']}
+        {best_vehicle['Vehicle']}
 
-    Appeared in the Top 3
-    {best_vehicle['Top 3 Appearances']} times.
-    """
-)
+        Appeared in the Top 3
+        {best_vehicle['Top 3 Appearances']} times.
+        """
+    )
 
-st.divider()
+    st.divider()
 
 # Bar Chart
 
-st.subheader(
-    "📊 Top Performing Vehicles"
-)
+    st.subheader(
+        "📊 Top Performing Vehicles"
+    )
 
-st.bar_chart(
-    leaderboard
-    .head(14)
-    .set_index("Vehicle")
-)
+    st.bar_chart(
+        leaderboard
+        .head(14)
+        .set_index("Vehicle")
+    )
 
-st.divider()
+    st.divider()
 
 # Leaderboard Table
 
-st.subheader(
-    "🏆 Vehicle Leaderboard"
-)
+    st.subheader(
+        "🏆 Vehicle Leaderboard"
+    )
 
-st.dataframe(
-    leaderboard,
-    use_container_width=True,
-    hide_index=True
-)
+    st.dataframe(
+        leaderboard,
+        use_container_width=True,
+        hide_index=True
+    )
 
 # ==========================================
 # RIDERSHIP PAGE
