@@ -402,83 +402,6 @@ elif page == "Performance & Insights":
     st.divider()
 
     # ==========================================
-    # MONTHLY PERFORMANCE
-    # ==========================================
-
-    monthly_auto = (
-        perf_df.groupby(
-            perf_df["Date"]
-            .dt.strftime("%B %Y")
-        )["% Distance in Auto"]
-        .mean()
-        .mul(100)
-    )
-
-    best_months = (
-        monthly_auto
-        .sort_values(
-            ascending=False
-        )
-        .head(5)
-    )
-
-    worst_months = (
-        monthly_auto
-        .sort_values(
-            ascending=True
-        )
-        .head(5)
-    )
-
-    st.subheader(
-        "📅 Monthly Performance"
-    )
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-
-        st.subheader(
-            "🏆 Best Months"
-        )
-
-        st.dataframe(
-            best_months
-            .reset_index()
-            .rename(
-                columns={
-                    "Date":"Month",
-                    "% Distance in Auto":
-                    "Average Auto %"
-                }
-            ),
-            hide_index=True,
-            use_container_width=True
-        )
-
-    with col2:
-
-        st.subheader(
-            "⚠️ Lowest Months"
-        )
-
-        st.dataframe(
-            worst_months
-            .reset_index()
-            .rename(
-                columns={
-                    "Date":"Month",
-                    "% Distance in Auto":
-                    "Average Auto %"
-                }
-            ),
-            hide_index=True,
-            use_container_width=True
-        )
-
-    st.divider()
-
-    # ==========================================
     # VEHICLE LEADERBOARD
     # ==========================================
 
@@ -565,6 +488,83 @@ elif page == "Performance & Insights":
         use_container_width=True,
         hide_index=True
     )
+
+    st.divider()
+
+    # ==========================================
+    # MONTHLY PERFORMANCE
+    # ==========================================
+
+    monthly_auto = (
+        perf_df.groupby(
+            perf_df["Date"]
+            .dt.strftime("%B %Y")
+        )["% Distance in Auto"]
+        .mean()
+        .mul(100)
+    )
+
+    best_months = (
+        monthly_auto
+        .sort_values(
+            ascending=False
+        )
+        .head(5)
+    )
+
+    worst_months = (
+        monthly_auto
+        .sort_values(
+            ascending=True
+        )
+        .head(5)
+    )
+
+    st.subheader(
+        "📅 Monthly Performance"
+    )
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+
+        st.subheader(
+            "🏆 Best Months"
+        )
+
+        st.dataframe(
+            best_months
+            .reset_index()
+            .rename(
+                columns={
+                    "Date":"Month",
+                    "% Distance in Auto":
+                    "Average Auto %"
+                }
+            ),
+            hide_index=True,
+            use_container_width=True
+        )
+
+    with col2:
+
+        st.subheader(
+            "⚠️ Lowest Months"
+        )
+
+        st.dataframe(
+            worst_months
+            .reset_index()
+            .rename(
+                columns={
+                    "Date":"Month",
+                    "% Distance in Auto":
+                    "Average Auto %"
+                }
+            ),
+            hide_index=True,
+            use_container_width=True
+        )
 
     st.divider()
     
