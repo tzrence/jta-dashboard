@@ -534,6 +534,7 @@ elif page == "Performance & Insights":
 
         st.dataframe(
             best_months
+            .round(2)
             .reset_index()
             .rename(
                 columns={
@@ -554,6 +555,7 @@ elif page == "Performance & Insights":
 
         st.dataframe(
             worst_months
+            .round(2)
             .reset_index()
             .rename(
                 columns={
