@@ -965,7 +965,7 @@ elif page == "Performance & Insights":
     st.subheader(
         "📋 Daily Performance Data"
     )
-    
+
     sort_option = st.selectbox(
         "Sort Performance Data By",
         [
@@ -977,76 +977,47 @@ elif page == "Performance & Insights":
             "Lowest Hard Brake %"
         ]
     )
-    
+
     if sort_option == "Highest Auto %":
-    
+
         performance_table = perf_df.sort_values(
             "% Distance in Auto",
             ascending=False
         )
-    
+
     elif sort_option == "Lowest Auto %":
-    
+
         performance_table = perf_df.sort_values(
             "% Distance in Auto",
             ascending=True
         )
-    
+
     elif sort_option == "Highest Hard Brake %":
-    
+
         performance_table = perf_df.sort_values(
             "Hard Brake %",
             ascending=False
         )
-    
+
     elif sort_option == "Lowest Hard Brake %":
-    
+
         performance_table = perf_df.sort_values(
             "Hard Brake %",
             ascending=True
         )
-    
+
     elif sort_option == "Oldest First":
-    
+
         performance_table = perf_df.sort_values(
             "Date",
             ascending=True
         )
-    
+
     else:
-    
+
         performance_table = perf_df.sort_values(
             "Date",
             ascending=False
         )
-    
-    display_table = performance_table.copy()
-    
-    display_table["% Distance in Auto"] = (
-        display_table["% Distance in Auto"] * 100
-    ).round(2)
-    
-    display_table["Hard Brake %"] = (
-        display_table["Hard Brake %"] * 100
-    ).round(2)
-    
-    st.dataframe(
-        display_table[
-            [
-                "Date",
-                "% Distance in Auto",
-                "Hard Brake %",
-                "Total Ridership"
-            ]
-        ].rename(
-            columns={
-                "% Distance in Auto":
-                "Autonomous Distance %",
-                "Hard Brake %":
-                "Hard Brake Rate %"
-            }
-        ),
-        hide_index=True,
-        use_container_width=True
-    )
-    
+
+   
