@@ -1035,8 +1035,7 @@ elif page == "Performance & Insights":
             [
                 "Date",
                 "% Distance in Auto",
-                "Hard Brake %",
-                "Total Ridership"
+                "Hard Brake %"
             ]
         ].rename(
             columns={
