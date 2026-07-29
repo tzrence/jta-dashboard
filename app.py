@@ -960,14 +960,15 @@ elif page == "Performance & Insights":
         hide_index=True,
         use_container_width=True
     )
+
     st.divider()
 
     st.subheader(
-        "📋 Daily Performance Data"
+        "📋 Daily Autonomous Performance Log"
     )
 
     sort_option = st.selectbox(
-        "Sort Performance Data By",
+        "Sort By",
         [
             "Newest First",
             "Oldest First",
@@ -975,49 +976,33 @@ elif page == "Performance & Insights":
             "Lowest Auto %",
             "Highest Hard Brake %",
             "Lowest Hard Brake %"
-        ]
+        ],
+        key="performance_sort"
     )
 
     if sort_option == "Highest Auto %":
-
         performance_table = perf_df.sort_values(
-            "% Distance in Auto",
+            by="% Distance in Auto",
             ascending=False
         )
 
     elif sort_option == "Lowest Auto %":
-
         performance_table = perf_df.sort_values(
-            "% Distance in Auto",
+            by="% Distance in Auto",
             ascending=True
         )
 
     elif sort_option == "Highest Hard Brake %":
-
         performance_table = perf_df.sort_values(
-            "Hard Brake %",
+            by="Hard Brake %",
             ascending=False
         )
 
     elif sort_option == "Lowest Hard Brake %":
-
         performance_table = perf_df.sort_values(
-            "Hard Brake %",
+            by="Hard Brake %",
             ascending=True
         )
 
     elif sort_option == "Oldest First":
-
-        performance_table = perf_df.sort_values(
-            "Date",
-            ascending=True
-        )
-
-    else:
-
-        performance_table = perf_df.sort_values(
-            "Date",
-            ascending=False
-        )
-
-   
+        performance_table 
